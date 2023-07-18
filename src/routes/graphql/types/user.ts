@@ -5,8 +5,9 @@ import { ProfileType } from './profile.js';
 import { PostsType } from './post.js';
 
 import prismaClient from '../prismaСlient.js';
+import { User } from '../interfaces/User.js';
 
-export const UserType = new GraphQLObjectType({
+export const UserType: GraphQLObjectType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id: { type: UUIDType },
@@ -14,19 +15,19 @@ export const UserType = new GraphQLObjectType({
     balance: { type: GraphQLFloat },
     profile: {
       type: ProfileType,
-      resolve: async ({ id }) =>
+      resolve: async ({ id }: User) =>
         await prismaClient.profile.findFirst({ where: { userId: id } }),
     },
 
     posts: {
       type: PostsType,
-      resolve: async ({ id }) =>
+      resolve: async ({ id }: User) =>
         await prismaClient.post.findMany({ where: { authorId: id } }),
     },
 
     userSubscribedTo: {
       type: UsersType,
-      resolve: async ({ id }) => {
+      resolve: async ({ id }: User) => {
         const results = await prismaClient.subscribersOnAuthors.findMany({
           where: { subscriberId: id },
           select: { author: true },
@@ -38,7 +39,7 @@ export const UserType = new GraphQLObjectType({
 
     subscribedToUser: {
       type: UsersType,
-      resolve: async ({ id }) => {
+      resolve: async ({ id }: User) => {
         const results = await prismaClient.subscribersOnAuthors.findMany({
           where: { authorId: id },
           select: { subscriber: true },
