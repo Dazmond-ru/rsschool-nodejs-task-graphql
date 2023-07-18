@@ -1,11 +1,15 @@
-import { GraphQLNonNull, GraphQLObjectType } from 'graphql/index.js';
+import { GraphQLObjectType } from 'graphql/index.js';
 
 import prismaClient from './prismaСlient.js';
-import { UUIDType } from './types/uuid.js';
+import { UUIDType, UUIDTypeNonNull } from './types/uuid.js';
 import { UserType, UsersType } from './types/user.js';
 import { PostType, PostsType } from './types/post.js';
 import { ProfileType, ProfilesType } from './types/profile.js';
-import { MemberType, MemberTypeId, MembersType } from './types/member.js';
+import { MemberType, MemberTypeIdNonNull, MembersType } from './types/member.js';
+import { User } from './interfaces/User.js';
+import { Post } from './interfaces/Post.js';
+import { Profile } from './interfaces/Profile.js';
+import { Member } from './interfaces/Member.js';
 
 export const Query = new GraphQLObjectType({
   name: 'Query',
@@ -14,7 +18,7 @@ export const Query = new GraphQLObjectType({
     user: {
       type: UserType,
       args: { id: { type: UUIDType } },
-      resolve: async (_parent, { id }) =>
+      resolve: async (_parent, { id }: User) =>
         await prismaClient.user.findFirst({ where: { id } }),
     },
 
@@ -25,8 +29,8 @@ export const Query = new GraphQLObjectType({
 
     post: {
       type: PostType,
-      args: { id: { type: new GraphQLNonNull(UUIDType) } },
-      resolve: async (_parent, { id }) =>
+      args: { id: { type: UUIDTypeNonNull } },
+      resolve: async (_parent, { id }: Post) =>
         await prismaClient.post.findFirst({ where: { id } }),
     },
 
@@ -38,7 +42,7 @@ export const Query = new GraphQLObjectType({
     profile: {
       type: ProfileType,
       args: { id: { type: UUIDType } },
-      resolve: async (_parent, { id }) =>
+      resolve: async (_parent, { id }: Profile) =>
         await prismaClient.profile.findFirst({ where: { id } }),
     },
 
@@ -50,9 +54,9 @@ export const Query = new GraphQLObjectType({
     memberType: {
       type: MemberType,
       args: {
-        id: { type: new GraphQLNonNull(MemberTypeId) },
+        id: { type: MemberTypeIdNonNull },
       },
-      resolve: async (_parent, { id }) =>
+      resolve: async (_parent, { id }: Member) =>
         await prismaClient.memberType.findFirst({ where: { id } }),
     },
 

@@ -1,12 +1,13 @@
-import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLObjectType } from 'graphql';
 
 import { UUIDType } from './uuid.js';
 import { UserType } from './user.js';
 import { MemberType, MemberTypeId } from './member.js';
 
 import prismaClient from '../prismaСlient.js';
+import { Profile } from '../interfaces/Profile.js';
 
-export const ProfileType = new GraphQLObjectType({
+export const ProfileType: GraphQLObjectType = new GraphQLObjectType({
   name: 'Profile',
   fields: () => ({
     id: { type: UUIDType },
@@ -15,16 +16,16 @@ export const ProfileType = new GraphQLObjectType({
     userId: { type: UUIDType },
     user: {
       type: UserType,
-      resolve: async ({ userId }) =>
+      resolve: async ({ userId }: Profile) =>
         prismaClient.user.findFirst({ where: { id: userId } }),
     },
     memberTypeId: { type: MemberTypeId },
     memberType: {
       type: MemberType,
-      resolve: async ({ memberTypeId }) =>
+      resolve: async ({ memberTypeId }: Profile) =>
         await prismaClient.memberType.findFirst({ where: { id: memberTypeId } }),
     },
   }),
 });
 
-export const ProfilesType = new GraphQLList(ProfileType)
+export const ProfilesType = new GraphQLList(ProfileType);

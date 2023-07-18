@@ -3,10 +3,12 @@ import {
   GraphQLFloat,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull,
   GraphQLObjectType,
 } from 'graphql';
 import { ProfilesType } from './profile.js';
 import prismaClient from '../prismaСlient.js';
+import { Member } from '../interfaces/Member.js';
 
 export const MemberTypeId = new GraphQLEnumType({
   name: 'MemberTypeId',
@@ -20,7 +22,7 @@ export const MemberTypeId = new GraphQLEnumType({
   },
 });
 
-export const MemberType = new GraphQLObjectType({
+export const MemberType: GraphQLObjectType  = new GraphQLObjectType({
   name: 'MemberType',
   fields: () => ({
     id: { type: MemberTypeId },
@@ -28,11 +30,13 @@ export const MemberType = new GraphQLObjectType({
     postsLimitPerMonth: { type: GraphQLInt },
     profiles: {
       type: ProfilesType,
-      resolve: async ({ id }) => {
+      resolve: async ({ id }: Member) => {
         await prismaClient.profile.findMany({ where: { memberTypeId: id } });
       },
     },
   }),
 });
+
+export const MemberTypeIdNonNull = new GraphQLNonNull(MemberTypeId);
 
 export const MembersType = new GraphQLList(MemberType);
