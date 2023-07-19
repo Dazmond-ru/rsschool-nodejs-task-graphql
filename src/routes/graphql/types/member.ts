@@ -7,7 +7,7 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 import { ProfilesType } from './profile.js';
-import prismaClient from '../prismaСlient.js';
+import prismaClient from '../prismaClient.js';
 import { Member } from '../interfaces/Member.js';
 
 export const MemberTypeId = new GraphQLEnumType({
