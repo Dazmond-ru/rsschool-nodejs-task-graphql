@@ -4,7 +4,7 @@ import { UUIDType } from './uuid.js';
 import { UserType } from './user.js';
 import { MemberType, MemberTypeId } from './member.js';
 
-import prismaClient from '../prismaСlient.js';
+import prismaClient from '../prismaClient.js';
 import { Profile } from '../interfaces/Profile.js';
 
 export const ProfileType: GraphQLObjectType = new GraphQLObjectType({
