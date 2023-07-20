@@ -1,17 +1,25 @@
-interface UserSubscribedTo {
-  subscriberId: string;
+export interface UserSubscribedTo {
+  userId: string;
   authorId: string;
 }
-
-interface SubscribedToUser {
-  subscriberId: string;
-  authorId: string;
-};
 
 export interface User {
   id: string;
   name: string;
   balance: number;
-  userSubscribedTo?: UserSubscribedTo[];
-  subscribedToUser?: SubscribedToUser[];
+}
+
+export interface CreateUser {
+  dto: {
+    name: string;
+    balance: number;
+  };
+}
+
+export interface ChangeUser {
+  id: string;
+  dto: {
+    name: string;
+    balance: number;
+  };
 }
